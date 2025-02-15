@@ -1,0 +1,37 @@
+{% load custom_filters %}
+
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Задача типа 2</h5>
+    </div>
+    <div class="card-body">
+        <p>{{ exam_question.question }}</p>
+
+        {% if not exam_question.is_finished %}
+            <form method="post" action="">
+                {% csrf_token %}
+
+                {{ exam_question_form.non_field_errors }}
+
+                <div class="mb-3">
+                    {{ exam_question_form.selected_option1_is_true.errors }}
+                    {{ exam_question_form.selected_option1_is_true }}
+                    <label for="{{ exam_question_form.selected_option1_is_true.id_for_label }}">{{ exam_question.option1 }}</label>
+                </div>
+                <div class="mb-3">
+                    {{ exam_question_form.selected_option2_is_true.errors }}
+                    {{ exam_question_form.selected_option2_is_true }}
+                    <label for="{{ exam_question_form.selected_option2_is_true.id_for_label }}">{{ exam_question.option2 }}</label>
+                </div>
+                {% if exam_question.option3.strip %}
+                    <div class="mb-3">
+                        {{ exam_question_form.selected_option3_is_true.errors }}
+                        {{ exam_question_form.selected_option3_is_true }}
+                        <label for="{{ exam_question_form.selected_option3_is_true.id_for_label }}">{{ exam_question.option3 }}</label>
+                    </div>
+                {% endif %}
+                <button type="submit" class="btn btn-primary">Отправить</button>
+            </form>
+        {% endif %}
+    </div>
+</div>

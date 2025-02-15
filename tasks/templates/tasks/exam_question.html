@@ -1,0 +1,29 @@
+{% extends 'tasks/base.html' %}
+{% load static %}
+
+{% block title %}Задача {{ task.id }} - Проблема {{ problem.id }}{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Задача {{ task.id }} - Проблема {{ problem.id }}</h1>
+
+{% if exam_question.QUESTION_TYPE == QuestionTypes.INCORRECT_WORD %}
+    {% include 'tasks/_exam_question_incorrect_word.html' %}
+{% elif exam_question.QUESTION_TYPE == QuestionTypes.OPTIONS %}
+    {% include 'tasks/_exam_question_options.html' %}
+{% endif %}
+
+<!-- Навигация между задачами -->
+<div class="d-flex justify-content-between mt-4">
+    {% if prev_problem %}
+        <a href="" class="btn btn-secondary">Предыдущая задача</a>
+    {% endif %}
+    {% if next_problem %}
+        <a href="" class="btn btn-secondary">Следующая задача</a>
+    {% endif %}
+</div>
+
+<!-- Ссылка на страницу задания -->
+<div class="mt-4">
+    <a href="" class="btn btn-outline-primary">Вернуться к заданию</a>
+</div>
+{% endblock %}

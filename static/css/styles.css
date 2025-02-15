@@ -1,0 +1,44 @@
+/* Кастомные стили */
+body {
+    font-family: Arial, sans-serif;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.card {
+    margin-bottom: 20px;
+}
+
+.btn {
+    margin: 2px;
+}
+
+/* Стили для формы */
+form .form-control {
+    margin-bottom: 10px;
+}
+
+form .text-danger {
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+/* Стили для пагинации */
+.pagination {
+    margin-top: 20px;
+}
+
+.page-item.active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.page-link {
+    color: #007bff;
+}
+
+.page-link:hover {
+    color: #0056b3;
+}

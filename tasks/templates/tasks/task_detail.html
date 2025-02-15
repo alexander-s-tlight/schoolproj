@@ -1,0 +1,21 @@
+{% extends 'tasks/base.html' %}
+{% load static %}
+
+{% block title %}Задание {{ task.id }}{% endblock %}
+
+{% block content %}
+
+    <h1 class="mb-4">Задание {{ task.id }}</h1>
+
+    <h2 class="mb-4">{{ task.title }}</h2>
+
+    <p>{{ task.description }}</p>
+
+    <h2 class="mt-4">Задачи:</h2>
+
+    <div class="mt-4">
+        <a href="{% url 'exam_run' task.id %}" class="btn btn-primary">Начать выполнение</a>
+        <a href="{% url 'task_list' %}" class="btn btn-secondary">Список заданий</a>
+    </div>
+
+{% endblock %}
