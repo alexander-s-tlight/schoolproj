@@ -41,6 +41,7 @@ def task_list(request: HttpRequest) -> HttpResponse:
 
 
 def task_detail(request: HttpRequest, task_id: int) -> HttpResponse:
+    """Страница с информацией о задании."""
     task = get_object_or_404(Task, id=task_id)
 
     return render(request, 'tasks/task_detail.html', {'task': task})
