@@ -4,10 +4,11 @@ from .models import Task, IncorrectWordQuestionBlank, OptionsQuestionBlank
 
 class IncorrectWordQuestionBlankInline(admin.TabularInline):
     """Настройка отображения модели IncorrectWordQuestionBlank."""
-    
+
     model = IncorrectWordQuestionBlank
     extra = 1
     fields = ('correct_word', 'incorrect_word')
+
 
 class OptionsQuestionBlankInline(admin.TabularInline):
     model = OptionsQuestionBlank
@@ -22,5 +23,3 @@ class TaskAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Task, TaskAdmin)
-# admin.site.register(IncorrectWordQuestionBlank)
-# admin.site.register(OptionsQuestionBlank)

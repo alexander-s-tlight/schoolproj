@@ -1,11 +1,10 @@
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 
 from django.core.paginator import Paginator
-from django.urls import reverse
 
 from tasks.forms import ExamOptionsQuestionForm
 from tasks.services.selectors.tasks import exam_get_prev_and_next_question, exam_get_questions
@@ -23,7 +22,7 @@ def home(request: HttpRequest) -> HttpResponse:
         login(request, user)
 
         return redirect('task_list')
-    
+
     return render(request, 'tasks/home.html', context={'auth_form': auth_form})
 
 
@@ -47,24 +46,25 @@ def task_detail(request: HttpRequest, task_id: int) -> HttpResponse:
     return render(request, 'tasks/task_detail.html', {'task': task})
 
 
-def exam_run(request: HttpRequest, task_id: int) -> HttpResponse: 
+def exam_run(request: HttpRequest, task_id: int) -> HttpResponse:
     """Запускает испытание, перенаправляет на страницу выполнения первого задания."""
     task = get_object_or_404(Task, id=task_id)
     _x, first_exam_question = exam_create_by_task(task=task, user=request.user)
-    
+
     if first_exam_question:
-           return redirect('exam_question', first_exam_question.QUESTION_TYPE, first_exam_question.id)
-   
+        return redirect('exam_question', first_exam_question.QUESTION_TYPE, first_exam_question.id)
+
     return redirect('homepage')
 
 
-def exam_question(request: HttpRequest, question_type: str, question_id: int) -> HttpResponse: 
+def exam_question(request: HttpRequest, question_type: str, question_id: int) -> HttpResponse:
     """Страница с вопросом испытания."""
-    if not question_type in QuestionTypes: raise Http404
+    if question_type not in QuestionTypes:
+        raise Http404
 
     exam_question_model = EXAM_QUESTION_MODEL_BY_TYPE[question_type]
     exam_question = get_object_or_404(exam_question_model, id=question_id)
-    
+
     exam_question_form = None
     if question_type == QuestionTypes.OPTIONS:
         exam_question_form = ExamOptionsQuestionForm(request.POST or None, instance=exam_question)
@@ -76,7 +76,7 @@ def exam_question(request: HttpRequest, question_type: str, question_id: int) ->
 
             if next_question:
                 return redirect('exam_question', next_question.QUESTION_TYPE, next_question.id)
-            
+
             return redirect('exam_results', exam_question.exam_id)
 
     context = {
@@ -88,7 +88,7 @@ def exam_question(request: HttpRequest, question_type: str, question_id: int) ->
     return render(request, 'tasks/exam_question.html', context)
 
 
-def exam_question_incorrect_word_answer(request: HttpRequest, question_id: int, letter_index: int) -> HttpResponse: 
+def exam_question_incorrect_word_answer(request: HttpRequest, question_id: int, letter_index: int) -> HttpResponse:
     """Фиксация ответа на вопрос с некорректным словом."""
     exam_question = get_object_or_404(ExamIncorrectWordQuestion, id=question_id)
     exam_options_question_incorrect_word_answer_set(question=exam_question, letter_index=letter_index)
