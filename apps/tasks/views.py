@@ -6,9 +6,9 @@ from django.contrib.auth.forms import AuthenticationForm
 
 from django.core.paginator import Paginator
 
-from tasks.forms import ExamOptionsQuestionForm
-from tasks.services.selectors.tasks import exam_get_prev_and_next_question, exam_get_questions
-from tasks.services.tasks import exam_create_by_task, exam_options_question_incorrect_word_answer_set
+from apps.tasks.forms import ExamOptionsQuestionForm
+from apps.tasks.services.selectors.tasks import exam_get_prev_and_next_question, exam_get_questions
+from apps.tasks.services.tasks import exam_create_by_task, exam_options_question_incorrect_word_answer_set
 
 from .models import EXAM_QUESTION_MODEL_BY_TYPE, ExamIncorrectWordQuestion, QuestionTypes, Task, UserExam
 

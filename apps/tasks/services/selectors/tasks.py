@@ -1,4 +1,4 @@
-from tasks.models import ExamIncorrectWordQuestion, ExamOptionsQuestion, UserExam
+from apps.tasks.models import ExamIncorrectWordQuestion, ExamOptionsQuestion, UserExam
 
 
 def exam_get_questions(exam: UserExam) -> None:

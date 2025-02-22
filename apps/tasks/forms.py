@@ -1,6 +1,6 @@
 from django import forms
 
-from tasks.models import ExamOptionsQuestion
+from apps.tasks.models import ExamOptionsQuestion
 
 
 class ExamOptionsQuestionForm(forms.ModelForm):

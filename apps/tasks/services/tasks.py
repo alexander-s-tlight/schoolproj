@@ -3,7 +3,7 @@ import random
 from django.contrib.auth.models import User
 from django.db import transaction
 
-from tasks.models import (
+from apps.tasks.models import (
     ExamIncorrectWordQuestion,
     ExamOptionsQuestion,
     IncorrectWordQuestionBase,
