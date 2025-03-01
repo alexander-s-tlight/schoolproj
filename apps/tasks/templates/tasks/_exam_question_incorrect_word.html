@@ -1,12 +1,11 @@
-{% load custom_filters %}
+<h1 class="mb-4">Найди ошибку в слове: <strong>{{ exam_question.incorrect_word }}</strong></h1>
 
 <div class="card mb-4">
     <div class="card-header bg-primary text-white">
-        <h5 class="mb-0">Задача типа 1</h5>
+        <h5 class="mb-0">Кликни по первой букве, которая отличается в слове, написанном правильно</h5>
     </div>
     <div class="card-body">
-        <p>Найди ошибку в слове: <strong>{{ exam_question.incorrect_word }}</strong></p>
-        <p>Кликни по первой букве, которая отличается в слове, написанном правильно. Например в слове "каса" нужно выбрать букву "с" ("касСа").</p>
+        <p>Например, в слове "<strong>каса</strong>" нужно выбрать <strong>вторую</strong> букву "с" ("кас<strong>С</strong>а").</p>
         {% if not exam_question.is_finished %}
             <div>
                 {% for letter in exam_question.incorrect_word.lower %}

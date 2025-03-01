@@ -1,11 +1,9 @@
 {% extends 'tasks/base.html' %}
 {% load static %}
 
-{% block title %}Задача {{ task.id }} - Проблема {{ problem.id }}{% endblock %}
+{% block title %}Вопрос{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">Задача {{ task.id }} - Проблема {{ problem.id }}</h1>
-
 {% if exam_question.QUESTION_TYPE == QuestionTypes.INCORRECT_WORD %}
     {% include 'tasks/_exam_question_incorrect_word.html' %}
 {% elif exam_question.QUESTION_TYPE == QuestionTypes.OPTIONS %}
