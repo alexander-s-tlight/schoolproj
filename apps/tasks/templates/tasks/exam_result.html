@@ -5,6 +5,11 @@
 
 {% block content %}
 <h1 class="mb-4">Результаты выполнения задания</h1>
+
+<div class="list-group mb-1">
+    {% include 'tasks/_exam_result_panel.html' %}
+</div>
+
 <div class="list-group">
     {% for exam_question in exam_questions %}
         <div class="list-group-item">
@@ -18,9 +23,25 @@
                         {% endif %}
                     </a>
                 </h5>
-                <small>{{ result.finished_at|localtime|date:"d.m.Y H:i" }}</small>
+                <small>{{ exam_question.finished_at|localtime|date:"d.m.Y H:i"|default:'--' }}</small>
             </div>
-            <p class="mb-1">Итог: {% if exam_question.answer_is_correct %}Правильно{% else %}Неправильно{% endif %}</p>
+            <div class="d-flex flex-row w-100">
+                {% if exam_question.is_finished %}
+                    {% if exam_question.answer_is_correct %}
+                        <div class="alert alert-success p-2">
+                            Правильный ответ
+                        </div>
+                    {% else %}
+                        <div class="alert alert-danger p-2">
+                            Неправильный ответ
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="alert alert-warning m-1 p-2">
+                        Ещё нет ответа
+                    </div>
+                {% endif %}
+            </div>
         </div>
     {% endfor %}
 </div>

@@ -126,7 +126,7 @@ def exam_result(request, exam_id: int):
 
     context = {
         'QuestionTypes': QuestionTypes,
-        'exam': exam,
+        'exam_result': UserExamResults(exam=exam),
         'exam_questions': exam_get_questions(exam=exam),
     }
 
