@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+import itertools
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -141,6 +143,7 @@ class UserExam(models.Model):
     """
 
     user = models.ForeignKey(User, verbose_name='экзаменуемый', on_delete=models.PROTECT)
+    task = models.ForeignKey(Task, verbose_name='задание', on_delete=models.PROTECT)
     created_at = models.DateTimeField(verbose_name='дата добавления', auto_now_add=True)
     started_at = models.DateTimeField(verbose_name='дата начала', null=True, blank=True)
     finished_at = models.DateTimeField(verbose_name='дата завершения', null=True, blank=True)
@@ -151,6 +154,10 @@ class UserExam(models.Model):
         verbose_name = 'испытание'
         verbose_name_plural = 'испытания'
         ordering = ('id',)
+
+    def clean(self) -> None:
+        """Проверяет данные модели."""
+        self.finished_at = self.created_at
 
 
 class ExamQuestionFinishedMixin(models.Model):
@@ -246,3 +253,26 @@ class ExamOptionsQuestion(ExamQuestionFinishedMixin, OptionsQuestionBase):
                 not self.option3 or self.selected_option3_is_true == self.option3_is_true,
             ]
         )
+
+
+@dataclass
+class UserExamResults:
+    """Результаты испытания."""
+
+    exam: UserExam
+    queries_count: int = 0
+    correct_answers_count: int = 0
+
+    def __post_init__(self) -> None:
+        """Выполняет постинициализационную обработку."""
+        for question in itertools.chain(
+            self.exam.examincorrectwordquestion_set.all(), self.exam.examoptionsquestion_set.all()
+        ):
+            self.queries_count += 1
+            if question.answer_is_correct:
+                self.correct_answers_count += 1
+
+    @property
+    def incorrect_answers_count(self) -> int:
+        """Количество неверных ответов."""
+        return self.queries_count - self.correct_answers_count
