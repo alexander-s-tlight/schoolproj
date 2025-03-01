@@ -159,6 +159,10 @@ class UserExam(models.Model):
         """Проверяет данные модели."""
         self.finished_at = self.created_at
 
+    def is_finished(self) -> bool:
+        """Испытание завершено."""
+        return bool(self.finished_at)
+
 
 class ExamQuestionFinishedMixin(models.Model):
     """Примесь для общей логики завершения ответа на вопрос."""
@@ -275,4 +279,5 @@ class UserExamResults:
     @property
     def incorrect_answers_count(self) -> int:
         """Количество неверных ответов."""
+
         return self.queries_count - self.correct_answers_count

@@ -1,0 +1,28 @@
+{% load static tz %}
+
+<a href="{% url 'exam_result' exam_result.exam.id %}" class="list-group-item list-group-item-action">
+    <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">{{ exam_result.exam.task.title }}</h5>
+        <small>Результат {{ exam_result.exam.id }}</small>
+    </div>
+    <p class="mb-1">Начало в {{ exam_result.exam.created_at|localtime|date:"d.m.Y H:i"|default:"--" }}</p>
+    <p class="mb-1">Завершено в {{ exam_result.exam.finished_at|localtime|date:"d.m.Y H:i"|default:"--" }}</p>
+    <p class="mb-1">{{ exam_result.exam.title }}</p>
+    <div class="d-flex flex-row w-100">
+        <div class="alert alert-primary m-1 ml-0 p-2">
+            Всего вопросов {{ exam_result.queries_count }}
+        </div>
+        {% if exam_result.incorrect_answers_count %}
+            <div class="alert alert-success m-1 p-2">
+                Правильных ответов {{ exam_result.correct_answers_count }}
+            </div>
+            <div class="alert alert-danger m-1 p-2">
+                Неправильных ответов {{ exam_result.incorrect_answers_count }}
+            </div>
+        {% else %}
+            <div class="alert alert-success m-1 p-2">
+                Все ответы правильные
+            </div>
+        {% endif %}
+    </div>
+</a>

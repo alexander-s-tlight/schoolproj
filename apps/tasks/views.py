@@ -93,7 +93,7 @@ def exam_question(request: HttpRequest, question_type: str, question_id: int) ->
                 return redirect('exam_question', next_question.QUESTION_TYPE, next_question.id)
 
             exam_set_finished_at(exam=exam_question.exam)
-            return redirect('exam_results', exam_question.exam_id)
+            return redirect('exam_result', exam_question.exam_id)
 
     context = {
         'QuestionTypes': QuestionTypes,
@@ -116,11 +116,11 @@ def exam_question_incorrect_word_answer(request: HttpRequest, question_id: int, 
         return redirect('exam_question', next_question.QUESTION_TYPE, next_question.id)
 
     exam_set_finished_at(exam=exam_question.exam)
-    return redirect('exam_results', exam_question.exam_id)
+    return redirect('exam_result', exam_question.exam_id)
 
 
 @login_required
-def exam_results(request, exam_id: int):
+def exam_result(request, exam_id: int):
     """Страница с результатами испытания."""
     exam = get_object_or_404(UserExam, id=exam_id)
 
@@ -130,7 +130,7 @@ def exam_results(request, exam_id: int):
         'exam_questions': exam_get_questions(exam=exam),
     }
 
-    return render(request, 'tasks/exam_results.html', context=context)
+    return render(request, 'tasks/exam_result.html', context=context)
 
 
 @login_required

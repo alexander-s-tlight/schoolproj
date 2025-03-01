@@ -18,7 +18,7 @@ urlpatterns = [
                     name='exam_question_incorrect_word_answer',
                 ),
                 path('results/', views.exam_list, name='exam_list'),
-                path('results/<int:exam_id>/', views.exam_results, name='exam_results'),
+                path('results/<int:exam_id>/', views.exam_result, name='exam_result'),
             ]
         ),
     ),

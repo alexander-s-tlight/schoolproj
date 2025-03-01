@@ -22,6 +22,6 @@
 
 <!-- Ссылка на страницу задания -->
 <div class="mt-4">
-    <a href="" class="btn btn-outline-primary">Вернуться к заданию</a>
+    <a href="{% url 'exam_result' exam_question.exam_id %}" class="btn btn-outline-primary">Список вопросов</a>
 </div>
 {% endblock %}

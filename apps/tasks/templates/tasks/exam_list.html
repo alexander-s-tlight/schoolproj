@@ -7,33 +7,8 @@
     <h1 class="mb-4">Выполненные задания</h1>
 
     <div class="list-group mb-4">
-        {% for exam_results in exams_results %}
-            <a href="{% url 'exam_results' exam_results.exam.id %}" class="list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ exam_results.exam.task.title }}</h5>
-                    <small>Результат {{ exam_results.exam.id }}</small>
-                </div>
-                <p class="mb-1">Начало в {{ exam_results.exam.created_at|localtime|date:"d.m.Y H:i"|default:"--" }}</p>
-                <p class="mb-1">Завершено в {{ exam_results.exam.finished_at|localtime|date:"d.m.Y H:i"|default:"--" }}</p>
-                <p class="mb-1">{{ exam_results.exam.title }}</p>
-                <div class="d-flex flex-row w-100">
-                    <div class="alert alert-primary m-1 ml-0 p-2">
-                        Всего вопросов {{ exam_results.queries_count }}
-                    </div>
-                    {% if exam_results.incorrect_answers_count %}
-                        <div class="alert alert-success m-1 p-2">
-                            Правильных ответов {{ exam_results.correct_answers_count }}
-                        </div>
-                        <div class="alert alert-danger m-1 p-2">
-                            Неправильных ответов {{ exam_results.incorrect_answers_count }}
-                        </div>
-                    {% else %}
-                        <div class="alert alert-success m-1 p-2">
-                            Все ответы правильные
-                        </div>
-                    {% endif %}
-                </div>
-            </a>
+        {% for exam_result in exams_results %}
+            {% include 'tasks/_exam_result_panel.html' %}
         {% endfor %}
     </div>
 
