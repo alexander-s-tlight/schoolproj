@@ -3,14 +3,23 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-
 from django.core.paginator import Paginator
 
 from apps.tasks.forms import ExamOptionsQuestionForm
 from apps.tasks.services.selectors.tasks import exam_get_prev_and_next_question, exam_get_questions
-from apps.tasks.services.tasks import exam_create_by_task, exam_options_question_incorrect_word_answer_set
-
-from .models import EXAM_QUESTION_MODEL_BY_TYPE, ExamIncorrectWordQuestion, QuestionTypes, Task, UserExam
+from apps.tasks.services.tasks import (
+    exam_create_by_task,
+    exam_options_question_incorrect_word_answer_set,
+    exam_set_finished_at,
+)
+from apps.tasks.models import (
+    EXAM_QUESTION_MODEL_BY_TYPE,
+    ExamIncorrectWordQuestion,
+    QuestionTypes,
+    Task,
+    UserExam,
+    UserExamResults,
+)
 
 
 def home(request: HttpRequest) -> HttpResponse:
@@ -77,6 +86,7 @@ def exam_question(request: HttpRequest, question_type: str, question_id: int) ->
             if next_question:
                 return redirect('exam_question', next_question.QUESTION_TYPE, next_question.id)
 
+            exam_set_finished_at(exam=exam_question.exam)
             return redirect('exam_results', exam_question.exam_id)
 
     context = {
@@ -98,6 +108,7 @@ def exam_question_incorrect_word_answer(request: HttpRequest, question_id: int, 
     if next_question:
         return redirect('exam_question', next_question.QUESTION_TYPE, next_question.id)
 
+    exam_set_finished_at(exam=exam_question.exam)
     return redirect('exam_results', exam_question.exam_id)
 
 
@@ -116,11 +127,22 @@ def exam_results(request, exam_id: int):
 
 def exam_list(request: HttpRequest) -> HttpResponse:
     """Страница со списком испытаний."""
-    exams = UserExam.objects.filter(user=request.user).order_by('-created_at')
+    exams = (
+        UserExam.objects.filter(user=request.user)
+        .select_related('task')
+        .prefetch_related('examincorrectwordquestion_set', 'examoptionsquestion_set')
+        .order_by('-created_at')
+    )
 
     paginator = Paginator(exams, 10)
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'tasks/exam_list.html', {'page_obj': page_obj, 'exams': exams})
+    return render(
+        request,
+        'tasks/exam_list.html',
+        {
+            'exams_results': [UserExamResults(exam=e) for e in page_obj],
+        },
+    )
