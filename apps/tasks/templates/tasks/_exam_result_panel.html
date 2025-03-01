@@ -12,16 +12,22 @@
         <div class="alert alert-primary m-1 ml-0 p-2">
             Всего вопросов {{ exam_result.queries_count }}
         </div>
-        {% if exam_result.incorrect_answers_count %}
-            <div class="alert alert-success m-1 p-2">
-                Правильных ответов {{ exam_result.correct_answers_count }}
-            </div>
-            <div class="alert alert-danger m-1 p-2">
-                Неправильных ответов {{ exam_result.incorrect_answers_count }}
-            </div>
+        {% if exam_result.exam.is_finished %}
+            {% if exam_result.incorrect_answers_count %}
+                <div class="alert alert-success m-1 p-2">
+                    Правильных ответов {{ exam_result.correct_answers_count }}
+                </div>
+                <div class="alert alert-danger m-1 p-2">
+                    Неправильных ответов {{ exam_result.incorrect_answers_count }}
+                </div>
+            {% else %}
+                <div class="alert alert-success m-1 p-2">
+                    Все ответы правильные
+                </div>
+            {% endif %}
         {% else %}
-            <div class="alert alert-success m-1 p-2">
-                Все ответы правильные
+            <div class="alert alert-warning m-1 p-2">
+                Ещё не завершено
             </div>
         {% endif %}
     </div>
