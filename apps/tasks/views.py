@@ -48,6 +48,7 @@ def task_list(request: HttpRequest) -> HttpResponse:
     return render(request, 'tasks/task_list.html', {'page_obj': page_obj})
 
 
+@login_required
 def task_detail(request: HttpRequest, task_id: int) -> HttpResponse:
     """Страница с информацией о задании."""
     task = get_object_or_404(Task, id=task_id)
@@ -55,6 +56,7 @@ def task_detail(request: HttpRequest, task_id: int) -> HttpResponse:
     return render(request, 'tasks/task_detail.html', {'task': task})
 
 
+@login_required
 def exam_run(request: HttpRequest, task_id: int) -> HttpResponse:
     """Запускает испытание, перенаправляет на страницу выполнения первого задания."""
     task = get_object_or_404(Task, id=task_id)
@@ -66,6 +68,7 @@ def exam_run(request: HttpRequest, task_id: int) -> HttpResponse:
     return redirect('homepage')
 
 
+@login_required
 def exam_question(request: HttpRequest, question_type: str, question_id: int) -> HttpResponse:
     """Страница с вопросом испытания."""
     if question_type not in QuestionTypes:
@@ -98,6 +101,7 @@ def exam_question(request: HttpRequest, question_type: str, question_id: int) ->
     return render(request, 'tasks/exam_question.html', context)
 
 
+@login_required
 def exam_question_incorrect_word_answer(request: HttpRequest, question_id: int, letter_index: int) -> HttpResponse:
     """Фиксация ответа на вопрос с некорректным словом."""
     exam_question = get_object_or_404(ExamIncorrectWordQuestion, id=question_id)
@@ -112,6 +116,7 @@ def exam_question_incorrect_word_answer(request: HttpRequest, question_id: int, 
     return redirect('exam_results', exam_question.exam_id)
 
 
+@login_required
 def exam_results(request, exam_id: int):
     """Страница с результатами испытания."""
     exam = get_object_or_404(UserExam, id=exam_id)
@@ -125,6 +130,7 @@ def exam_results(request, exam_id: int):
     return render(request, 'tasks/exam_results.html', context=context)
 
 
+@login_required
 def exam_list(request: HttpRequest) -> HttpResponse:
     """Страница со списком испытаний."""
     exams = (

@@ -2,56 +2,85 @@
 
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Русский язык{% endblock %}</title>
-    {% if settings.DEBUG %}
-        <link href="{% static 'core/vendors/bootstrap-5.3.3-dist/css/bootstrap.css' %}" rel="stylesheet">
-    {% else %}
-        <link href="{% static 'core/vendors/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}" rel="stylesheet">
-    {% endif %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-</head>
-<body>
-    <!-- Навигационная панель -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">Русский язык</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'task_list' %}">Задания</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'exam_list' %}">Результаты</a>
-                    </li>
-                </ul>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Учебная платформа{% endblock %}</title>
+        {% if settings.DEBUG %}
+            <link href="{% static 'core/vendors/bootstrap-5.3.3-dist/css/bootstrap.css' %}" rel="stylesheet">
+            <link href="{% static 'core/vendors/fontawesome-free-6.7.2-web/css/all.css' %}" rel="stylesheet">
+        {% else %}
+            <link href="{% static 'core/vendors/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}" rel="stylesheet">
+            <link href="{% static 'core/vendors/fontawesome-free-6.7.2-web/css/all.min.css' %}" rel="stylesheet">
+        {% endif %}
+        <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
+        
+        <script type="text/javascript">
+            function logout(event) {
+                event.preventDefault();
+                fetch(
+                    '{% url "logout" %}', 
+                    {
+                        method: 'POST',
+                        headers: { "X-CSRFToken": '{{csrf_token}}'},
+                    }
+                ).then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    }
+                });
+            }
+        </script>
+    </head>
+    <body>
+        <!-- Навигационная панель -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="{% url 'home' %}">Учебная платформа</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        {% if request.user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'task_list' %}">Задания</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'exam_list' %}">Результаты</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"><i class="fa fa-user"></i> {{ request.user.username }}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" onclick="logout(event);" class="nav-link"><i class="fa fa-sign-out-alt"></i></a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'home' %}">Войти</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
+        </nav>
+
+        <div class="container mt-4">
+            {% block content %}
+            {% endblock %}
         </div>
-    </nav>
 
-    <!-- Основное содержимое -->
-    <div class="container mt-4">
-        {% block content %}
-        {% endblock %}
-    </div>
+        <footer class="bg-light text-center py-3 mt-4">
+            <div class="container">
+                <p class="mb-0">&copy; 2025 Учебная платформа.</p>
+            </div>
+        </footer>
 
-    <!-- Подвал -->
-    <footer class="bg-light text-center py-3 mt-4">
-        <div class="container">
-            <p class="mb-0">&copy; 2023 Русский язык. Все права защищены.</p>
-        </div>
-    </footer>
+        {% if settings.DEBUG %}
+            <script src="{% static 'core/vendors/bootstrap-5.3.3-dist/js/bootstrap.bundle.js' %}"></script>
+        {% else %}
+            <script src="{% static 'core/vendors/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
+        {% endif %}
 
-    {% if settings.DEBUG %}
-        <script src="{% static 'core/vendors/bootstrap-5.3.3-dist/js/bootstrap.bundle.js' %}"></script>
-    {% else %}
-        <script src="{% static 'core/vendors/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
-    {% endif %}
-
-</body>
+    </body>
 </html>
