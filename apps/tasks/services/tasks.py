@@ -2,6 +2,7 @@ import random
 
 from django.contrib.auth.models import User
 from django.db import transaction
+from django.utils import timezone
 
 from apps.tasks.models import (
     ExamIncorrectWordQuestion,
@@ -68,7 +69,7 @@ def exam_create_by_task(
     *, task: Task, user: User
 ) -> tuple[UserExam, ExamOptionsQuestion | ExamIncorrectWordQuestion | None]:
     """Создает испытание на основе задания."""
-    exam = UserExam(user=user)
+    exam = UserExam(user=user, task=task)
     # В текущей реализации дата начала совпадает с датой добавления.
     exam.started_at = exam.created_at
     exam.full_clean()
@@ -101,3 +102,10 @@ def exam_options_question_incorrect_word_answer_set(*, question: ExamIncorrectWo
     question.selected_letter_index = letter_index
     question.full_clean()
     question.save(update_fields=['selected_letter_index', 'finished_at'])
+
+
+def exam_set_finished_at(*, exam: UserExam) -> None:
+    """Устанавливает время завершения испытания."""
+    exam.finished_at = timezone.now()
+    exam.full_clean()
+    exam.save(update_fields=['finished_at'])
