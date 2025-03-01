@@ -24,6 +24,9 @@ from apps.tasks.models import (
 
 def home(request: HttpRequest) -> HttpResponse:
     """Домашняя страница."""
+    if request.user.is_authenticated:
+        return redirect('task_list')
+
     auth_form = AuthenticationForm(request, data=request.POST or None)
 
     if auth_form.is_valid():

@@ -6,15 +6,18 @@
     </div>
     <div class="card-body">
         <p>Найди ошибку в слове: <strong>{{ exam_question.incorrect_word }}</strong></p>
-
+        <p>Кликни по первой букве, которая отличается в слове, написанном правильно. Например в слове "каса" нужно выбрать букву "с" ("касСа").</p>
         {% if not exam_question.is_finished %}
-            {% for letter in exam_question.incorrect_word.lower %}
-                <a href="{% url 'exam_question_incorrect_word_answer' exam_question.id forloop.counter %}">{{ letter }}</a>
-            {% endfor %}
-
-            <a href="{% url 'exam_question_incorrect_word_answer' exam_question.id 0 %}">
-                <button class="btn btn-primary">Слово написано правильно</button>
-            </a>
-        {% endif %}
+            <div>
+                {% for letter in exam_question.incorrect_word.lower %}
+                    <a class="link-offset-2 link-underline link-underline-opacity-0 fs-1" href="{% url 'exam_question_incorrect_word_answer' exam_question.id forloop.counter %}">{{ letter }}</a>
+                {% endfor %}
+            </div>
+            <div>
+                <a href="{% url 'exam_question_incorrect_word_answer' exam_question.id 0 %}">
+                    <button class="btn btn-primary mt-3">Слово написано правильно</button>
+                </a>
+            </div>
+            {% endif %}
     </div>
 </div>
